@@ -1,0 +1,17 @@
+body
+{
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+canvas
+{
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  border: 4px solid black;
+  box-shadow: 6px 6px #777;
+}
