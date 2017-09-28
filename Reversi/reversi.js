@@ -57,10 +57,12 @@ function isLegalMove(x, y)
             }
             else if (!state.board[tempY][tempX])
             {
+              //reset capture list if you hit a null square
               state.possibleCaptureList = [];
               break;
             }
 
+            //check to see if you can capture pieces
             if (checkPiece(tempX, tempY))
             {
               break;
@@ -236,7 +238,7 @@ function isLegalMove(x, y)
     }
   }
 
-
+  //if we moves to apply then there are legal moves
   if(state.captureList.length > 0)
   {
     return true;
@@ -254,12 +256,14 @@ function isLegalMove(x, y)
 */
 function checkPiece (x, y)
 {
+  //a struct to store a piece's coordinates, if I were to expand this project all pieces would store their location information already
   var possibleCaptures =
   {
     x: x,
     y: y
   }
 
+  //if we find a piece that is different from the turn player's we add it to a possible move list
   if(state.board[y][x].charAt(0) != state.turn)
   {
     state.possibleCaptureList.push(possibleCaptures);
@@ -268,7 +272,7 @@ function checkPiece (x, y)
   }
   else if(state.otherPiece)
   {
-    //if we found a
+    //if we found the turn player's piece again we add all possible moves to apply move list
     state.captureList = state.captureList.concat(state.possibleCaptureList);
     state.possibleCaptureList = [];
     return true;
@@ -295,7 +299,7 @@ function checkBounds(x, y)
 }
 
 /** @function ApplyMove
-  * A function to apply the selected move to the game
+  * A function to apply the selected move(s) to the game
   */
 function applyMove()
 {
@@ -351,7 +355,6 @@ function scoreCheck()
 */
 function boardPosition(x, y)
 {
-//  console.log(x,y,event.offsetX, event.clientX);
   var boardX = Math.floor(x / 100);
   var boardY = Math.floor(y / 100);
   return {x: boardX, y: boardY}
@@ -360,7 +363,6 @@ function boardPosition(x, y)
 //handles what happens when you click the board
 function handleMouseDown(event)
 {
-  console.log(event.offsetX, event.offsetY);
   if(isButton(event.offsetX, event.offsetY) && canMove() === false)
   {
     passTurn();
@@ -470,22 +472,42 @@ function endGame()
 
 function displayWinner(winner)
 {
-    ctx.globalAlpha = 0.1;
-    ctx.fillStyle = "Black";
-    ctx.fillRect(0, 0, 800, 800);
-    ctx.font = "40px Arial";
-    ctx.fillStyle = "White";
-    ctx.textAlign = "center";
-    if (winner == "White" || winner == "Black")
-    {
-      console.log("yesyes");
-      ctx.fillText(winner + " is the winner!", 400, 400);
-    }
-    else
-    {
-      console.log("yesyes2");
-      ctx.fillText("It's a Draw! Refresh to play again", 400, 400);
-    }
+
+  ctx.globalAlpha = 0.7;
+  ctx.fillStyle = "Black";
+  ctx.fillRect(0, 0, 800, 800);
+  if (winner == "White" || winner == "Black")
+  {
+      document.getElementById("Winner").innerHTML = winner;
+  }
+  else
+  {
+      document.getElementById("Winner").innerHTML = "It's a Draw!";
+  }
+
+  var modal = document.getElementById('myModal');
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+      modal.style.display = "block";
+
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+      modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  }
+
 }
 /** @function renderBoard()
   * Renders the entire game board.
